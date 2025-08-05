@@ -2,41 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* MarqueiAi Design System - Agenda Inteligente para Autônomos 
+Paleta baseada em: Azul claro, Branco puro, Cinza suave, Cinza escuro, Verde suave
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core brand colors */
+    --background: 0 0% 100%; /* Branco puro */
+    --foreground: 0 0% 29%; /* Cinza escuro #4A4A4A */
 
+    /* MarqueiAi brand colors */
+    --brand-blue: 210 71% 58%; /* Azul claro #4A90E2 */
+    --brand-green: 88 61% 72%; /* Verde suave #7ED957 */
+    --brand-gray-light: 218 22% 97%; /* Cinza suave #F5F7FA */
+    --brand-gray-dark: 0 0% 29%; /* Cinza escuro #4A4A4A */
+
+    /* Component colors using brand palette */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 29%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 29%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 71% 58%; /* Brand blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 218 22% 97%; /* Brand gray light */
+    --secondary-foreground: 0 0% 29%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 218 22% 97%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 88 61% 72%; /* Brand green */
+    --accent-foreground: 0 0% 29%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 88 61% 72%; /* Verde suave */
+    --success-foreground: 0 0% 29%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --border: 218 22% 91%;
+    --input: 218 22% 95%;
+    --ring: 210 71% 58%;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -94,12 +106,66 @@ All colors MUST be HSL.
   }
 }
 
+    /* Gradients for beautiful effects */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--brand-blue) / 0.8));
+    --gradient-success: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--brand-green) / 0.8));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    
+    /* Shadows for depth */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
+    --shadow-soft: 0 4px 20px -4px hsl(var(--brand-blue) / 0.1);
+    --shadow-card: 0 2px 10px -2px hsl(var(--brand-gray-dark) / 0.1);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* ... keep existing dark mode colors ... */
+    --brand-blue: 210 71% 68%;
+    --brand-green: 88 61% 82%;
+    --brand-gray-light: 218 22% 87%;
+    --brand-gray-dark: 0 0% 85%;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  /* Hero gradient background */
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  /* Smooth transitions for interactive elements */
+  .smooth-transition {
+    transition: var(--transition-smooth);
+  }
+  
+  /* Elegant shadows */
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
   }
 }
