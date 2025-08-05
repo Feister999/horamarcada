@@ -1,8 +1,27 @@
 import { Check, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import CheckoutModal from "./CheckoutModal";
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  const handlePlanSelect = (plan: any) => {
+    if (plan.name === "Gratuito") {
+      navigate("/cadastro");
+    } else if (plan.name === "Premium") {
+      // Simular contato com especialista
+      window.open("https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o plano Premium", "_blank");
+    } else {
+      setSelectedPlan(plan);
+      setIsCheckoutOpen(true);
+    }
+  };
+
   const plans = [
     {
       name: "Gratuito",
@@ -137,6 +156,7 @@ const PricingSection = () => {
                   }`}
                   variant={plan.variant}
                   size="lg"
+                  onClick={() => handlePlanSelect(plan)}
                 >
                   {plan.popular && <Zap className="w-4 h-4 mr-2" />}
                   {plan.cta}
@@ -186,6 +206,18 @@ const PricingSection = () => {
             </p>
           </div>
         </div>
+
+        {/* Checkout Modal */}
+        {selectedPlan && (
+          <CheckoutModal
+            isOpen={isCheckoutOpen}
+            onClose={() => {
+              setIsCheckoutOpen(false);
+              setSelectedPlan(null);
+            }}
+            plan={selectedPlan}
+          />
+        )}
       </div>
     </section>
   );

@@ -1,7 +1,14 @@
 import { Calendar, ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const CTASection = () => {
+  const navigate = useNavigate();
+
+  const handleStartFree = () => {
+    navigate("/cadastro");
+  };
+
   return (
     <section className="py-20 bg-gradient-to-br from-primary via-primary/95 to-accent relative overflow-hidden">
       {/* Background decoration */}
@@ -62,6 +69,7 @@ const CTASection = () => {
             <Button 
               size="lg" 
               className="bg-background text-foreground hover:bg-background/90 shadow-elegant text-lg px-10 py-6 font-semibold"
+              onClick={handleStartFree}
             >
               <Calendar className="w-6 h-6 mr-3" />
               Começar Grátis Agora

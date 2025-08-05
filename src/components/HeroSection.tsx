@@ -1,7 +1,21 @@
 import { Calendar, Clock, CheckCircle, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleStartFree = () => {
+    navigate("/cadastro");
+  };
+
+  const handleViewDemo = () => {
+    const demoSection = document.getElementById('features');
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-background py-20 lg:py-32">
       {/* Background decoration */}
@@ -47,6 +61,7 @@ const HeroSection = () => {
               <Button 
                 size="lg" 
                 className="bg-primary hover:bg-primary/90 shadow-elegant text-lg px-8 py-6"
+                onClick={handleStartFree}
               >
                 <Calendar className="w-5 h-5 mr-2" />
                 Começar Grátis
@@ -55,6 +70,7 @@ const HeroSection = () => {
                 variant="outline" 
                 size="lg" 
                 className="border-primary text-primary hover:bg-primary/5 text-lg px-8 py-6"
+                onClick={handleViewDemo}
               >
                 <Clock className="w-5 h-5 mr-2" />
                 Ver Demo

@@ -110,10 +110,23 @@ const FeaturesSection = () => {
             Mais de <strong>50 funcionalidades</strong> para profissionalizar seu negócio
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-medium shadow-elegant smooth-transition">
+            <button 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-medium shadow-elegant smooth-transition"
+              onClick={() => {
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                  pricingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
               Explorar Todas as Funcionalidades
             </button>
-            <button className="border border-primary text-primary hover:bg-primary/5 px-8 py-4 rounded-xl font-medium smooth-transition">
+            <button 
+              className="border border-primary text-primary hover:bg-primary/5 px-8 py-4 rounded-xl font-medium smooth-transition"
+              onClick={() => {
+                window.open('https://demo.marqueiai.com', '_blank');
+              }}
+            >
               Ver Demo Completa
             </button>
           </div>
