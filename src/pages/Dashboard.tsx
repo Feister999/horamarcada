@@ -87,7 +87,9 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button>Configurar minha agenda</Button>
+              <Button onClick={() => window.location.href = '/agenda-config'}>
+                Configurar minha agenda
+              </Button>
             </CardContent>
           </Card>
         </div>
