@@ -25,6 +25,7 @@ export type Database = {
           id: string
           notes: string | null
           provider_id: string
+          service_id: string | null
           start_time: string
           status: string
           updated_at: string
@@ -39,6 +40,7 @@ export type Database = {
           id?: string
           notes?: string | null
           provider_id: string
+          service_id?: string | null
           start_time: string
           status?: string
           updated_at?: string
@@ -53,6 +55,7 @@ export type Database = {
           id?: string
           notes?: string | null
           provider_id?: string
+          service_id?: string | null
           start_time?: string
           status?: string
           updated_at?: string
@@ -64,6 +67,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "appointments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -141,6 +151,84 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration: number
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration?: number
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration?: number
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          appointment_count: number | null
+          created_at: string
+          email: string
+          id: string
+          service_count: number | null
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          appointment_count?: number | null
+          created_at?: string
+          email: string
+          id?: string
+          service_count?: number | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          appointment_count?: number | null
+          created_at?: string
+          email?: string
+          id?: string
+          service_count?: number | null
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       unavailable_dates: {
         Row: {
           created_at: string
@@ -178,7 +266,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_subscription_limits: {
+        Args: { user_id_param: string; operation_type: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
