@@ -1,12 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
+import { Calendar, ArrowLeft, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +16,14 @@ const Register = () => {
     confirmPassword: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { signUp, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,39 +32,27 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // Validações básicas
-      if (formData.password !== formData.confirmPassword) {
-        toast.error("As senhas não coincidem!");
-        return;
-      }
-
-      if (formData.password.length < 6) {
-        toast.error("A senha deve ter pelo menos 6 caracteres!");
-        return;
-      }
-
-      // Aqui será implementada a criação de conta com Supabase
-      console.log("Register attempt:", formData);
-      
-      // Simulação de cadastro por enquanto
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success("Conta criada com sucesso! Redirecionando...");
-      
-      // Redirecionar para login após cadastro
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-      
-    } catch (error) {
-      console.error("Erro no cadastro:", error);
-      toast.error("Erro ao criar conta. Tente novamente.");
-    } finally {
-      setIsLoading(false);
+    
+    // Validações básicas
+    if (formData.password !== formData.confirmPassword) {
+      return; // Error is handled by toast in context
     }
+
+    if (formData.password.length < 6) {
+      return; // Error is handled by toast in context
+    }
+
+    setIsLoading(true);
+    
+    const { error } = await signUp(formData.email, formData.password, formData.name);
+    
+    if (!error) {
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -136,8 +131,15 @@ const Register = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Criando conta..." : "Criar conta grátis"}
+              <Button type="submit" className="w-full shadow-soft" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Criando conta...
+                  </>
+                ) : (
+                  'Criar conta grátis'
+                )}
               </Button>
             </form>
 

@@ -1,19 +1,44 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, Users, TrendingUp } from "lucide-react";
+import { Calendar, Clock, Users, TrendingUp, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const { user, signOut, subscription } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
-            Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Bem-vindo à sua agenda inteligente
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
+              Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Bem-vindo, {user?.user_metadata?.display_name || user?.email}! 
+              {subscription && (
+                <span className="ml-2 px-2 py-1 text-xs bg-primary text-primary-foreground rounded">
+                  {subscription.subscription_tier === 'free' ? 'Gratuito' : 'Premium'}
+                </span>
+              )}
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleLogout}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Sair
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -87,9 +112,14 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => window.location.href = '/agenda-config'}>
+            <div className="flex gap-4">
+              <Button onClick={() => navigate('/agenda-config')} className="shadow-soft">
                 Configurar minha agenda
               </Button>
+              <Button variant="outline" onClick={() => navigate('/meus-agendamentos')}>
+                Ver agendamentos
+              </Button>
+            </div>
             </CardContent>
           </Card>
         </div>

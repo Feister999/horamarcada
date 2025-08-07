@@ -1,38 +1,37 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
+import { Calendar, ArrowLeft, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    try {
-      // Aqui será implementada a autenticação com Supabase
-      console.log("Login attempt:", { email, password });
-      
-      // Simulação de login por enquanto
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success("Login realizado com sucesso!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Erro no login:", error);
-      toast.error("Erro ao fazer login. Verifique suas credenciais.");
-    } finally {
-      setIsLoading(false);
+    
+    const { error } = await signIn(email, password);
+    
+    if (!error) {
+      navigate('/dashboard');
     }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -83,8 +82,15 @@ const Login = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Entrando..." : "Entrar"}
+              <Button type="submit" className="w-full shadow-soft" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Entrando...
+                  </>
+                ) : (
+                  'Entrar'
+                )}
               </Button>
             </form>
 
