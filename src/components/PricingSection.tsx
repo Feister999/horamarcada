@@ -1,14 +1,10 @@
 import { Check, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CheckoutModal from "./CheckoutModal";
 
 const PricingSection = () => {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const handlePlanSelect = (plan: any) => {
     if (plan.name === "Gratuito") {
@@ -16,12 +12,6 @@ const PricingSection = () => {
     } else if (plan.name === "Profissional") {
       // Redirecionar para o link do Mercado Pago
       window.open("https://mpago.la/1XdWxZ1", "_blank");
-    } else if (plan.name === "Premium") {
-      // Simular contato com especialista
-      window.open("https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o plano Premium", "_blank");
-    } else {
-      setSelectedPlan(plan);
-      setIsCheckoutOpen(true);
     }
   };
 
@@ -59,25 +49,6 @@ const PricingSection = () => {
       ],
       cta: "Assinar Plano Profissional",
       variant: "default" as const
-    },
-    {
-      name: "Premium",
-      price: "R$ 59",
-      period: "/mês",
-      description: "Para escalar seu negócio",
-      popular: false,
-      features: [
-        "Tudo do Profissional",
-        "Marca branca (sem logo MarqueiAi)",
-        "API para integrações avançadas",
-        "Múltiplos usuários/colaboradores",
-        "Analytics avançado",
-        "Automações personalizadas",
-        "Suporte VIP 24/7",
-        "Consultoria de otimização"
-      ],
-      cta: "Falar com Especialista",
-      variant: "outline" as const
     }
   ];
 
@@ -101,25 +72,16 @@ const PricingSection = () => {
             Todos os planos incluem suporte e atualizações.
           </p>
 
-          {/* Pricing Toggle */}
-          <div className="inline-flex items-center bg-muted rounded-xl p-1">
-            <button className="px-4 py-2 rounded-lg bg-background shadow-sm text-foreground font-medium">
-              Mensal
-            </button>
-            <button className="px-4 py-2 rounded-lg text-muted-foreground font-medium">
-              Anual <span className="text-xs bg-success text-success-foreground px-2 py-1 rounded-full ml-1">-20%</span>
-            </button>
-          </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto justify-center items-stretch">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`relative border-2 shadow-card hover:shadow-soft smooth-transition ${
+              className={`relative border-2 shadow-card hover:shadow-soft smooth-transition w-full max-w-sm mx-auto ${
                 plan.popular 
-                  ? 'border-primary bg-primary/5' 
+                  ? 'border-primary bg-primary/5 scale-105' 
                   : 'border-border hover:border-primary/30'
               }`}
             >
@@ -210,17 +172,6 @@ const PricingSection = () => {
           </div>
         </div>
 
-        {/* Checkout Modal */}
-        {selectedPlan && (
-          <CheckoutModal
-            isOpen={isCheckoutOpen}
-            onClose={() => {
-              setIsCheckoutOpen(false);
-              setSelectedPlan(null);
-            }}
-            plan={selectedPlan}
-          />
-        )}
       </div>
     </section>
   );
