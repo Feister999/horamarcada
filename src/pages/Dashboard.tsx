@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, Clock, Users, TrendingUp, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import SubscriptionStatus from "@/components/SubscriptionStatus";
 
 const Dashboard = () => {
   const { user, signOut, subscription } = useAuth();
@@ -23,12 +24,7 @@ const Dashboard = () => {
               Dashboard
             </h1>
             <p className="text-muted-foreground">
-              Bem-vindo, {user?.user_metadata?.display_name || user?.email}! 
-              {subscription && (
-                <span className="ml-2 px-2 py-1 text-xs bg-primary text-primary-foreground rounded">
-                  {subscription.subscription_tier === 'free' ? 'Gratuito' : 'Premium'}
-                </span>
-              )}
+              Bem-vindo, {user?.user_metadata?.display_name || user?.email}!
             </p>
           </div>
           <Button 
@@ -40,6 +36,8 @@ const Dashboard = () => {
             Sair
           </Button>
         </div>
+
+        <SubscriptionStatus />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>

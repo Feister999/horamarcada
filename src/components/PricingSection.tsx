@@ -13,6 +13,9 @@ const PricingSection = () => {
   const handlePlanSelect = (plan: any) => {
     if (plan.name === "Gratuito") {
       navigate("/cadastro");
+    } else if (plan.name === "Profissional") {
+      // Redirecionar para o link do Mercado Pago
+      window.open("https://mpago.la/1XdWxZ1", "_blank");
     } else if (plan.name === "Premium") {
       // Simular contato com especialista
       window.open("https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o plano Premium", "_blank");
@@ -41,7 +44,7 @@ const PricingSection = () => {
     },
     {
       name: "Profissional",
-      price: "R$ 29",
+      price: "R$ 14,90",
       period: "/mês",
       description: "Para profissionais estabelecidos",
       popular: true,
@@ -54,7 +57,7 @@ const PricingSection = () => {
         "Personalização visual",
         "Suporte prioritário"
       ],
-      cta: "Experimentar 14 dias grátis",
+      cta: "Assinar Plano Profissional",
       variant: "default" as const
     },
     {
