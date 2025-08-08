@@ -5,6 +5,7 @@ import { Calendar, Clock, Users, TrendingUp, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import SubscriptionStatus from "@/components/SubscriptionStatus";
+import PlanLimits from "@/components/PlanLimits";
 
 const Dashboard = () => {
   const { user, signOut, subscription } = useAuth();
@@ -38,6 +39,8 @@ const Dashboard = () => {
         </div>
 
         <SubscriptionStatus />
+        
+        <PlanLimits subscription={subscription} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>

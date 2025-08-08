@@ -270,6 +270,10 @@ export type Database = {
         Args: { user_id_param: string; operation_type: string }
         Returns: boolean
       }
+      get_subscription_status: {
+        Args: { user_id_param: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
