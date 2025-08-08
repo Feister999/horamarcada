@@ -128,9 +128,9 @@ All colors MUST be HSL.
     font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   }
   
-  /* Apply dark theme by default */
+  /* Dark theme will be applied via class */
   html {
-    @apply dark;
+    color-scheme: dark;
   }
   
   h1, h2, h3, h4, h5, h6 {
