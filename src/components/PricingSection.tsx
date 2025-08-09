@@ -2,16 +2,23 @@ import { Check, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PricingSection = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handlePlanSelect = (plan: any) => {
     if (plan.name === "Gratuito") {
       navigate("/cadastro");
     } else if (plan.name === "Profissional") {
-      // Redirecionar para o link do Mercado Pago
-      window.open("https://mpago.la/1XdWxZ1", "_blank");
+      if (user) {
+        // User is logged in, redirect to Mercado Pago
+        window.open("https://mpago.la/1XdWxZ1", "_blank");
+      } else {
+        // User not logged in, redirect to login with returnTo parameter
+        navigate("/login?returnTo=professional-plan");
+      }
     }
   };
 

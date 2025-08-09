@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* MarqueiAi Design System - Agenda Inteligente para Autônomos 
+/* Hora Marcada Design System - Agenda Inteligente para Autônomos 
 Paleta baseada em: Azul claro, Branco puro, Cinza suave, Cinza escuro, Verde suave
 All colors MUST be HSL.
 */
@@ -13,7 +13,7 @@ All colors MUST be HSL.
     --background: 0 0% 7%; /* #111111 - Preto escuro */
     --foreground: 0 0% 95%; /* Branco para contraste */
 
-    /* MarqueiAi brand colors - Dark theme */
+    /* Hora Marcada brand colors - Dark theme */
     --brand-blue: 210 100% 56%; /* #1E90FF - Azul principal */
     --brand-blue-dark: 210 100% 45%; /* Azul mais escuro */
     --brand-gray-light: 0 0% 15%; /* Cinza escuro para cards */

@@ -124,7 +124,7 @@ const FeaturesSection = () => {
             <button 
               className="border border-primary text-primary hover:bg-primary/5 px-8 py-4 rounded-xl font-medium smooth-transition"
               onClick={() => {
-                window.open('https://demo.marqueiai.com', '_blank');
+                window.open('https://demo.horamarcada.com', '_blank');
               }}
             >
               Ver Demo Completa

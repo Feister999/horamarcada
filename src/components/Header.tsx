@@ -24,7 +24,7 @@ const Header = () => {
               <Calendar className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-2xl font-heading font-bold text-foreground">
-              MarqueiAi
+              Hora Marcada
             </span>
           </div>
 

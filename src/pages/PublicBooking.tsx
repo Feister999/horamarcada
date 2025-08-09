@@ -124,20 +124,31 @@ const PublicBooking = () => {
   };
 
   const generateTimeSlots = () => {
-    if (!selectedDate) return;
+    if (!selectedDate || availability.length === 0) return;
 
     const dayOfWeek = selectedDate.getDay();
     const dateString = format(selectedDate, "yyyy-MM-dd");
     
+    console.log("Generating slots for:", {
+      date: dateString,
+      dayOfWeek,
+      availability: availability.length,
+      availabilityData: availability
+    });
+    
     // Verificar se o dia está indisponível
     if (unavailableDates.includes(dateString)) {
+      console.log("Date is unavailable");
       setAvailableSlots([]);
       return;
     }
 
     const daySettings = availability.find(a => a.day_of_week === dayOfWeek);
     
+    console.log("Day settings found:", daySettings);
+    
     if (!daySettings || !daySettings.is_available) {
+      console.log("No day settings or day not available");
       setAvailableSlots([]);
       return;
     }
@@ -153,6 +164,11 @@ const PublicBooking = () => {
     endTime.setHours(endHour, endMinute, 0, 0);
     
     const currentTime = new Date(startTime);
+    
+    console.log("Time slots generation:", {
+      startHour, startMinute, endHour, endMinute,
+      sessionDuration: daySettings.session_duration
+    });
     
     while (currentTime < endTime) {
       const timeString = format(currentTime, "HH:mm");
@@ -173,6 +189,7 @@ const PublicBooking = () => {
       currentTime.setMinutes(currentTime.getMinutes() + daySettings.session_duration);
     }
     
+    console.log("Generated slots:", slots);
     setAvailableSlots(slots);
   };
 

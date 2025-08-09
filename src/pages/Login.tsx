@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,12 +14,20 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      const returnTo = searchParams.get('returnTo');
+      if (returnTo === 'professional-plan') {
+        // Redirect to Mercado Pago for professional plan
+        window.open("https://mpago.la/1XdWxZ1", "_blank");
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     }
-  }, [user, navigate]);
+  }, [user, navigate, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +36,14 @@ const Login = () => {
     const { error } = await signIn(email, password);
     
     if (!error) {
-      navigate('/dashboard');
+      const returnTo = searchParams.get('returnTo');
+      if (returnTo === 'professional-plan') {
+        // Redirect to Mercado Pago for professional plan
+        window.open("https://mpago.la/1XdWxZ1", "_blank");
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     }
     
     setIsLoading(false);
@@ -44,7 +59,7 @@ const Login = () => {
               <Calendar className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-2xl font-heading font-bold text-foreground">
-              MarqueiAi
+              Hora Marcada
             </span>
           </div>
         </div>

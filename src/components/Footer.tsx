@@ -12,7 +12,7 @@ const Footer = () => {
                 <Calendar className="w-6 h-6 text-primary-foreground" />
               </div>
               <span className="text-2xl font-heading font-bold">
-                MarqueiAi
+                Hora Marcada
               </span>
             </div>
             <p className="text-background/80 mb-6 leading-relaxed">
@@ -105,7 +105,7 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary" />
-                <span className="text-background/80">contato@marqueiai.com.br</span>
+                <span className="text-background/80">contato@horamarcada.com.br</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary" />
@@ -139,7 +139,7 @@ const Footer = () => {
         <div className="border-t border-background/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-background/60 text-sm">
-              © 2024 MarqueiAi. Todos os direitos reservados.
+              © 2024 Hora Marcada. Todos os direitos reservados.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-background/60 hover:text-background text-sm smooth-transition">

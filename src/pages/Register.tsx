@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,17 +12,25 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      const returnTo = searchParams.get('returnTo');
+      if (returnTo === 'professional-plan') {
+        // Redirect to Mercado Pago for professional plan
+        window.open("https://mpago.la/1XdWxZ1", "_blank");
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     }
-  }, [user, navigate]);
+  }, [user, navigate, searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,23 +40,26 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validações básicas
     if (formData.password !== formData.confirmPassword) {
-      return; // Error is handled by toast in context
+      alert("As senhas não coincidem");
+      return;
     }
-
+    
     if (formData.password.length < 6) {
-      return; // Error is handled by toast in context
+      alert("A senha deve ter pelo menos 6 caracteres");
+      return;
     }
-
+    
     setIsLoading(true);
     
     const { error } = await signUp(formData.email, formData.password, formData.name);
     
     if (!error) {
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      const returnTo = searchParams.get('returnTo');
+      if (returnTo === 'professional-plan') {
+        // Note: the user needs to confirm email first before being redirected
+        // The redirect will happen in the useEffect when user logs in
+      }
     }
     
     setIsLoading(false);
@@ -65,7 +75,7 @@ const Register = () => {
               <Calendar className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-2xl font-heading font-bold text-foreground">
-              MarqueiAi
+              Hora Marcada
             </span>
           </div>
         </div>
@@ -146,7 +156,10 @@ const Register = () => {
             <div className="mt-4 text-center space-y-2">
               <p className="text-sm text-muted-foreground">
                 Já tem uma conta?{" "}
-                <Link to="/login" className="text-primary hover:underline">
+                <Link 
+                  to={searchParams.get('returnTo') ? `/login?returnTo=${searchParams.get('returnTo')}` : "/login"} 
+                  className="text-primary hover:underline"
+                >
                   Entre aqui
                 </Link>
               </p>
