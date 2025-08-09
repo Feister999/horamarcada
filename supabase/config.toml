@@ -46,4 +46,7 @@ security_update_enabled = true
 security_captcha_enabled = false
 
 [functions.check-subscription]
-verify_jwt = true
+verify_jwt = false
+
+[functions.validate-appointment-limit]
+verify_jwt = false

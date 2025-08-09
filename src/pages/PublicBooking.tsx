@@ -63,12 +63,16 @@ const PublicBooking = () => {
     if (!userSlug) return;
 
     try {
+      console.log("Loading provider data for slug:", userSlug);
+      
       // Buscar perfil do prestador
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("user_id, display_name, business_name")
         .eq("slug", userSlug)
         .single();
+
+      console.log("Profile query result:", { profileData, profileError });
 
       if (profileError || !profileData) {
         toast({
@@ -82,31 +86,37 @@ const PublicBooking = () => {
       setProfile(profileData);
 
       // Buscar configurações de disponibilidade
-      const { data: availabilityData } = await supabase
+      const { data: availabilityData, error: availabilityError } = await supabase
         .from("availability_settings")
         .select("*")
         .eq("user_id", profileData.user_id);
+
+      console.log("Availability query result:", { availabilityData, availabilityError });
 
       if (availabilityData) {
         setAvailability(availabilityData);
       }
 
       // Buscar datas indisponíveis
-      const { data: unavailableData } = await supabase
+      const { data: unavailableData, error: unavailableError } = await supabase
         .from("unavailable_dates")
         .select("date")
         .eq("user_id", profileData.user_id);
+
+      console.log("Unavailable dates query result:", { unavailableData, unavailableError });
 
       if (unavailableData) {
         setUnavailableDates(unavailableData.map(d => d.date));
       }
 
       // Buscar agendamentos já marcados
-      const { data: appointmentsData } = await supabase
+      const { data: appointmentsData, error: appointmentsError } = await supabase
         .from("appointments")
         .select("appointment_date, start_time")
         .eq("provider_id", profileData.user_id)
         .eq("status", "confirmed");
+
+      console.log("Appointments query result:", { appointmentsData, appointmentsError });
 
       if (appointmentsData) {
         setBookedSlots(appointmentsData.map(apt => 
@@ -124,7 +134,11 @@ const PublicBooking = () => {
   };
 
   const generateTimeSlots = () => {
-    if (!selectedDate || availability.length === 0) return;
+    if (!selectedDate || availability.length === 0) {
+      console.log("No date selected or no availability data");
+      setAvailableSlots([]);
+      return;
+    }
 
     const dayOfWeek = selectedDate.getDay();
     const dateString = format(selectedDate, "yyyy-MM-dd");
@@ -227,9 +241,9 @@ const PublicBooking = () => {
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(endDateTime.getMinutes() + sessionDuration);
 
-      const { error } = await supabase
-        .from("appointments")
-        .insert({
+      // Usar a edge function para validar limites e criar agendamento
+      const { data: result, error: functionError } = await supabase.functions.invoke('validate-appointment-limit', {
+        body: {
           provider_id: profileData.user_id,
           client_name: bookingForm.clientName,
           client_email: bookingForm.clientEmail,
@@ -238,10 +252,22 @@ const PublicBooking = () => {
           start_time: selectedTime,
           end_time: format(endDateTime, "HH:mm"),
           notes: bookingForm.notes || null,
-          status: "confirmed",
-        });
+        }
+      });
 
-      if (error) throw error;
+      if (functionError) {
+        console.error("Error calling function:", functionError);
+        throw new Error("Erro ao processar agendamento");
+      }
+
+      if (!result.success) {
+        toast({
+          title: "Limite atingido",
+          description: result.message || "Limite de agendamentos atingido",
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({
         title: "Agendamento confirmado!",
@@ -313,15 +339,28 @@ const PublicBooking = () => {
                   onSelect={setSelectedDate}
                   disabled={(date) => {
                     const today = startOfDay(new Date());
-                    if (!isAfter(date, addDays(today, -1))) return true;
+                    if (!isAfter(date, addDays(today, -1))) {
+                      console.log("Date is in the past:", date);
+                      return true;
+                    }
                     
                     const dateString = format(date, "yyyy-MM-dd");
-                    if (unavailableDates.includes(dateString)) return true;
+                    if (unavailableDates.includes(dateString)) {
+                      console.log("Date is in unavailable list:", dateString);
+                      return true;
+                    }
                     
                     const dayOfWeek = date.getDay();
                     const daySettings = availability.find(a => a.day_of_week === dayOfWeek);
-                    return !daySettings || !daySettings.is_available;
+                    const shouldDisable = !daySettings || !daySettings.is_available;
+                    
+                    if (shouldDisable) {
+                      console.log("Day disabled - dayOfWeek:", dayOfWeek, "daySettings:", daySettings);
+                    }
+                    
+                    return shouldDisable;
                   }}
+                  locale={ptBR}
                   className="pointer-events-auto border rounded-lg"
                 />
               </div>
