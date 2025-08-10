@@ -259,7 +259,7 @@ const PublicBooking = () => {
         console.error("Error calling function:", functionError);
         toast({
           title: "Erro de conexão",
-          description: `Erro ao conectar com o servidor: ${functionError.message}`,
+          description: `Falha na comunicação com o servidor. Tente novamente em alguns instantes.`,
           variant: "destructive",
         });
         return;
@@ -269,17 +269,35 @@ const PublicBooking = () => {
         console.error("No result returned from function");
         toast({
           title: "Erro",
-          description: "Nenhuma resposta do servidor",
+          description: "Servidor não respondeu. Verifique sua conexão e tente novamente.",
           variant: "destructive",
         });
         return;
       }
 
-      if (!result.success) {
+      // Verificar se houve erro na resposta
+      if (result.success === false || result.error) {
         console.error("Function returned error:", result);
+        
+        // Mensagem específica baseada no tipo de erro
+        let errorMessage = "Erro desconhecido";
+        let errorTitle = "Erro";
+        
+        if (result.error === 'Monthly appointment limit reached') {
+          errorTitle = "Limite de agendamentos atingido";
+          errorMessage = result.message || "Limite mensal de agendamentos atingido";
+        } else if (result.error === 'Failed to create appointment') {
+          errorTitle = "Erro ao criar agendamento";
+          errorMessage = "Não foi possível salvar o agendamento. Verifique se o horário ainda está disponível.";
+        } else if (result.details) {
+          errorMessage = `${result.error || 'Erro'}: ${result.details}`;
+        } else {
+          errorMessage = result.message || result.error || "Erro ao processar agendamento";
+        }
+        
         toast({
-          title: result.error ? "Erro" : "Limite atingido",
-          description: result.message || result.error || "Limite de agendamentos atingido",
+          title: errorTitle,
+          description: errorMessage,
           variant: "destructive",
         });
         return;

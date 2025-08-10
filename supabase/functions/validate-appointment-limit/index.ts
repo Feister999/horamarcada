@@ -49,17 +49,18 @@ Deno.serve(async (req) => {
     const appointmentData: AppointmentRequest = await req.json();
     console.log('Validating appointment limit for provider:', appointmentData.provider_id);
 
-    // Get provider's subscription status
-    const { data: subscriptionData, error: subError } = await supabase
-      .from('subscribers')
-      .select('subscription_tier, subscribed, subscription_end')
-      .eq('user_id', appointmentData.provider_id)
-      .maybeSingle();
+    // Get provider's subscription status using the database function
+    const { data: planData, error: planError } = await supabase
+      .rpc('get_user_plan', { user_id_param: appointmentData.provider_id });
 
-    if (subError) {
-      console.error('Error fetching subscription:', subError);
+    if (planError) {
+      console.error('Error fetching user plan:', planError);
       return new Response(
-        JSON.stringify({ error: 'Failed to check subscription status' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Failed to check subscription status',
+          details: planError.message 
+        }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -67,21 +68,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Determine current plan
-    let currentPlan = 'free';
-    if (subscriptionData && subscriptionData.subscribed) {
-      const now = new Date();
-      const subEnd = subscriptionData.subscription_end ? new Date(subscriptionData.subscription_end) : null;
-      
-      if (!subEnd || subEnd > now) {
-        currentPlan = subscriptionData.subscription_tier || 'free';
-      }
-    }
-
+    const currentPlan = planData || 'free';
     console.log('Provider plan:', currentPlan);
 
-    // If professional plan, allow unlimited appointments
-    if (currentPlan === 'professional') {
+    // If professional or premium plan, allow unlimited appointments
+    if (currentPlan === 'professional' || currentPlan === 'premium') {
       console.log('Professional plan - unlimited appointments allowed');
       
       // Create the appointment
@@ -104,7 +95,11 @@ Deno.serve(async (req) => {
       if (appointmentError) {
         console.error('Error creating appointment:', appointmentError);
         return new Response(
-          JSON.stringify({ error: 'Failed to create appointment' }),
+          JSON.stringify({ 
+            success: false,
+            error: 'Failed to create appointment',
+            details: appointmentError.message 
+          }),
           { 
             status: 500, 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -138,7 +133,11 @@ Deno.serve(async (req) => {
     if (countError) {
       console.error('Error counting appointments:', countError);
       return new Response(
-        JSON.stringify({ error: 'Failed to check appointment limit' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Failed to check appointment limit',
+          details: countError.message 
+        }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -152,6 +151,7 @@ Deno.serve(async (req) => {
     if (appointmentCount >= 10) {
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Monthly appointment limit reached', 
           limit: 10,
           current: appointmentCount,
@@ -184,7 +184,11 @@ Deno.serve(async (req) => {
     if (appointmentError) {
       console.error('Error creating appointment:', appointmentError);
       return new Response(
-        JSON.stringify({ error: 'Failed to create appointment' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Failed to create appointment',
+          details: appointmentError.message 
+        }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -208,7 +212,11 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        success: false,
+        error: 'Internal server error',
+        details: error.message 
+      }),
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

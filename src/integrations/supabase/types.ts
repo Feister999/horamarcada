@@ -274,6 +274,10 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: Json
       }
+      get_user_plan: {
+        Args: { user_id_param: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
