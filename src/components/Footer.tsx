@@ -1,8 +1,6 @@
 import { Calendar, Mail, Phone, MapPin } from "lucide-react";
-
 const Footer = () => {
-  return (
-    <footer className="bg-foreground text-background">
+  return <footer className="bg-foreground text-background">
       <div className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -109,7 +107,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary" />
-                <span className="text-background/80">(11) 99999-9999</span>
+                <span className="text-background/80">(11) 96508-7151</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-primary" />
@@ -122,11 +120,7 @@ const Footer = () => {
                 Receba dicas e novidades:
               </p>
               <div className="flex">
-                <input 
-                  type="email" 
-                  placeholder="seu@email.com"
-                  className="flex-1 px-4 py-2 rounded-l-lg text-foreground text-sm"
-                />
+                <input type="email" placeholder="seu@email.com" className="flex-1 px-4 py-2 rounded-l-lg text-foreground text-sm" />
                 <button className="bg-primary hover:bg-primary/90 px-4 py-2 rounded-r-lg text-primary-foreground text-sm font-medium smooth-transition">
                   OK
                 </button>
@@ -138,9 +132,7 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-background/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-background/60 text-sm">
-              © 2024 Hora Marcada. Todos os direitos reservados.
-            </p>
+            <p className="text-background/60 text-sm">© 2025 Hora Marcada. Todos os direitos reservados.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-background/60 hover:text-background text-sm smooth-transition">
                 Privacidade
@@ -155,8 +147,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
