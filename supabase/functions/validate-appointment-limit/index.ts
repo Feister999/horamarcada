@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
       .from('subscribers')
       .select('subscription_tier, subscribed, subscription_end')
       .eq('user_id', appointmentData.provider_id)
-      .single();
+      .maybeSingle();
 
     if (subError) {
       console.error('Error fetching subscription:', subError);

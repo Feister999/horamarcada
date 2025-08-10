@@ -257,13 +257,29 @@ const PublicBooking = () => {
 
       if (functionError) {
         console.error("Error calling function:", functionError);
-        throw new Error("Erro ao processar agendamento");
+        toast({
+          title: "Erro de conexão",
+          description: `Erro ao conectar com o servidor: ${functionError.message}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!result) {
+        console.error("No result returned from function");
+        toast({
+          title: "Erro",
+          description: "Nenhuma resposta do servidor",
+          variant: "destructive",
+        });
+        return;
       }
 
       if (!result.success) {
+        console.error("Function returned error:", result);
         toast({
-          title: "Limite atingido",
-          description: result.message || "Limite de agendamentos atingido",
+          title: result.error ? "Erro" : "Limite atingido",
+          description: result.message || result.error || "Limite de agendamentos atingido",
           variant: "destructive",
         });
         return;
