@@ -1,23 +1,20 @@
 import { Calendar, Clock, CheckCircle, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-
 const HeroSection = () => {
   const navigate = useNavigate();
-
   const handleStartFree = () => {
     navigate("/cadastro");
   };
-
   const handleViewDemo = () => {
     const demoSection = document.getElementById('features');
     if (demoSection) {
-      demoSection.scrollIntoView({ behavior: 'smooth' });
+      demoSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-background py-20 lg:py-32">
+  return <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-background py-20 lg:py-32">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       
@@ -58,20 +55,11 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
-                size="lg" 
-                className="bg-primary hover:bg-primary/90 shadow-elegant text-lg px-8 py-6"
-                onClick={handleStartFree}
-              >
+              <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-elegant text-lg px-8 py-6" onClick={handleStartFree}>
                 <Calendar className="w-5 h-5 mr-2" />
                 Começar Grátis
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-primary text-primary hover:bg-primary/5 text-lg px-8 py-6"
-                onClick={handleViewDemo}
-              >
+              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5 text-lg px-8 py-6" onClick={handleViewDemo}>
                 <Clock className="w-5 h-5 mr-2" />
                 Ver Demo
               </Button>
@@ -101,7 +89,7 @@ const HeroSection = () => {
                   <div className="flex items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
                     <div className="w-2 h-12 bg-primary rounded-full mr-3"></div>
                     <div className="flex-1">
-                      <p className="font-medium text-sm">Consulta - João Silva</p>
+                      <p className="font-medium text-sm">Corte + Sobrancelha - Joao</p>
                       <p className="text-xs text-muted-foreground">09:00 - 10:00</p>
                     </div>
                     <CheckCircle className="w-5 h-5 text-success" />
@@ -110,7 +98,7 @@ const HeroSection = () => {
                   <div className="flex items-center p-3 bg-accent/10 rounded-lg border border-accent/20">
                     <div className="w-2 h-12 bg-accent rounded-full mr-3"></div>
                     <div className="flex-1">
-                      <p className="font-medium text-sm">Atendimento - Maria</p>
+                      <p className="font-medium text-sm">Corte Tesoura - Marcos</p>
                       <p className="text-xs text-muted-foreground">14:30 - 15:30</p>
                     </div>
                     <Clock className="w-5 h-5 text-muted-foreground" />
@@ -119,7 +107,7 @@ const HeroSection = () => {
                   <div className="flex items-center p-3 bg-muted rounded-lg border-dashed border border-border">
                     <div className="w-2 h-12 bg-muted-foreground/30 rounded-full mr-3"></div>
                     <div className="flex-1">
-                      <p className="font-medium text-sm text-muted-foreground">Horário disponível</p>
+                      <p className="font-medium text-sm text-muted-foreground">Corte + Barba - Caio</p>
                       <p className="text-xs text-muted-foreground">16:00 - 17:00</p>
                     </div>
                   </div>
@@ -142,8 +130,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
