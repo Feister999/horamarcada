@@ -22,7 +22,10 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="text-center lg:text-left">
-            
+            <div className="inline-flex items-center px-4 py-2 bg-accent/20 rounded-full text-sm font-medium text-accent-foreground mb-6">
+              <Zap className="w-4 h-4 mr-2" />
+              Powered by IA
+            </div>
             
             <h1 className="text-4xl lg:text-6xl font-heading font-bold text-foreground mb-6">
               Agenda Inteligente
