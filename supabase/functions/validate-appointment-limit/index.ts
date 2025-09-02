@@ -120,15 +120,21 @@ Deno.serve(async (req) => {
       );
     }
 
-    // For free plan, check monthly limit
-    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+    // For free plan, check monthly limit (10 appointments per month)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // getMonth() returns 0-11
+    const monthStart = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-01`;
+    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+    const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+    const monthEnd = `${nextYear}-${nextMonth.toString().padStart(2, '0')}-01`;
     
     const { data: monthlyAppointments, error: countError } = await supabase
       .from('appointments')
       .select('id')
       .eq('provider_id', appointmentData.provider_id)
-      .gte('appointment_date', `${currentMonth}-01`)
-      .lt('appointment_date', `${currentMonth}-32`);
+      .gte('appointment_date', monthStart)
+      .lt('appointment_date', monthEnd);
 
     if (countError) {
       console.error('Error counting appointments:', countError);

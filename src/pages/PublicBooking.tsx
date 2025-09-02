@@ -134,8 +134,8 @@ const PublicBooking = () => {
   };
 
   const generateTimeSlots = () => {
-    if (!selectedDate || availability.length === 0) {
-      console.log("No date selected or no availability data");
+    if (!selectedDate) {
+      console.log("No date selected");
       setAvailableSlots([]);
       return;
     }
@@ -153,6 +153,13 @@ const PublicBooking = () => {
     // Verificar se o dia está indisponível
     if (unavailableDates.includes(dateString)) {
       console.log("Date is unavailable");
+      setAvailableSlots([]);
+      return;
+    }
+
+    // Se não há configuração de disponibilidade, não mostrar horários
+    if (availability.length === 0) {
+      console.log("No availability settings found");
       setAvailableSlots([]);
       return;
     }
@@ -181,8 +188,17 @@ const PublicBooking = () => {
     
     console.log("Time slots generation:", {
       startHour, startMinute, endHour, endMinute,
-      sessionDuration: daySettings.session_duration
+      sessionDuration: daySettings.session_duration,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString()
     });
+    
+    // Garantir que há tempo suficiente para pelo menos um slot
+    if (currentTime >= endTime) {
+      console.log("Start time is not before end time");
+      setAvailableSlots([]);
+      return;
+    }
     
     while (currentTime < endTime) {
       const timeString = format(currentTime, "HH:mm");
@@ -200,6 +216,7 @@ const PublicBooking = () => {
         available: !isBooked && !isPast,
       });
       
+      // Avançar para o próximo slot
       currentTime.setMinutes(currentTime.getMinutes() + daySettings.session_duration);
     }
     
@@ -374,25 +391,22 @@ const PublicBooking = () => {
                   disabled={(date) => {
                     const today = startOfDay(new Date());
                     if (!isAfter(date, addDays(today, -1))) {
-                      console.log("Date is in the past:", date);
                       return true;
                     }
                     
                     const dateString = format(date, "yyyy-MM-dd");
                     if (unavailableDates.includes(dateString)) {
-                      console.log("Date is in unavailable list:", dateString);
                       return true;
+                    }
+                    
+                    // Se não há configuração de disponibilidade, permitir seleção (será tratado na geração de slots)
+                    if (availability.length === 0) {
+                      return false;
                     }
                     
                     const dayOfWeek = date.getDay();
                     const daySettings = availability.find(a => a.day_of_week === dayOfWeek);
-                    const shouldDisable = !daySettings || !daySettings.is_available;
-                    
-                    if (shouldDisable) {
-                      console.log("Day disabled - dayOfWeek:", dayOfWeek, "daySettings:", daySettings);
-                    }
-                    
-                    return shouldDisable;
+                    return !daySettings || !daySettings.is_available;
                   }}
                   locale={ptBR}
                   className="pointer-events-auto border rounded-lg"
